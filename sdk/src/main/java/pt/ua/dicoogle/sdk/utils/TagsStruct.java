@@ -39,11 +39,11 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 /**
  * Structure to manage all the tags inside Dicoogle.
  * 
- * There are three groups. DIM Fields, DICOM Fields and PrivateFields
+ * There are three groups. DIM Fields, DICOM Fields and PrivateFields.
  * DIM Fields may either be DICOM or Private.
- * A DICOM and Private groups do not overlap
+ * DICOM and Private groups do not overlap
  * 
- * Other fields is the common designation for fields that do not belong to the DIM.
+ * An "Other" field is the common designation for fields that do not belong to the DIM.
  *
  * @author Lu??s A. Basti??o Silva <bastiao@ua.pt>
  * @author Tiago Marques Godinho <tmgodinho@ua.pt> Refactor
@@ -67,23 +67,15 @@ public class TagsStruct
     
     private List<String> dictionaries = new ArrayList<String>();
 
-    private static TagsStruct instance = null ;
-    private static Semaphore sem = new Semaphore(1, true);
+    private static TagsStruct instance = null;
 
-    public static synchronized TagsStruct getInstance()
-    {
-        try
-        {
-            sem.acquire();
-            if (instance == null)
-            {
-                instance = new TagsStruct();
-            }
-            sem.release();
-        }
-        catch (InterruptedException ex)
-        {
-            LoggerFactory.getLogger(TagsStruct.class).error(ex.getMessage(), ex);
+    /** Obtain a global instance of Tag information.
+     *
+     * @return the application's global instance, for use in production
+     */
+    public static synchronized TagsStruct getInstance() {
+        if (instance == null) {
+            instance = new TagsStruct();
         }
         return instance;
     }
@@ -344,7 +336,7 @@ public class TagsStruct
     /**
      * 
      * @param tagNumber
-     * @return The TagValue object for the given Number, or null.
+     * @return The TagValue object for the given Number, or null if there is no such tag.
      */
     public TagValue getTagValue(int tagNumber){
     	return this.tagValueMappings.get(tagNumber);
@@ -352,8 +344,8 @@ public class TagsStruct
     
     /**
      * 
-     * @param tagNumber
-     * @return The TagValue object for the given its name, or null.
+     * @param tagName
+     * @return The TagValue object for the given name, or null if there is no such tag.
      */
     public TagValue getTagValue(String tagName){
     	Integer x = this.tagNameMappings.getKey(tagName);
