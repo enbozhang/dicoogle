@@ -202,11 +202,9 @@ const Step = React.createClass({
   componentWillReceiveProps: function(nextProps){
     this.setState({current: nextProps.current});
   },
-  render: function() {  
+  render: function() {
     let numResults = 0;
-    if (this.props.searchOutcome.data!=null )
-    {
-      
+    if (!this.props.searchOutcome) {
       numResults = this.props.searchOutcome.data.numResults;
     }
 
@@ -227,8 +225,8 @@ const Step = React.createClass({
             <div>Image</div>
           </div>
 
-        </div>  
-      </div>  
+        </div>
+      </div>
       );
   },
   getStep: function(current, step) {
