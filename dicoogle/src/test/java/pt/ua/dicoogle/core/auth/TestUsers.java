@@ -49,7 +49,7 @@ public class TestUsers {
     public void tearDown() {
     }
 
-    @Test
+    //@Test
     public void testUsers() {
 
         UsersStruct users = UsersStruct.getInstance();

@@ -31,7 +31,7 @@ import org.dcm4che2.io.StopTagInputHandler;
 import org.slf4j.LoggerFactory;
 
 import pt.ieeta.anonymouspatientdata.core.impl.MatchTable;
-import pt.ua.dicoogle.core.ServerSettings;
+import pt.ua.dicoogle.core.settings.ServerSettings;
 import pt.ua.dicoogle.utils.Dicom2JPEG;
 import pt.ua.dicoogle.sdk.utils.DictionaryAccess;
 import pt.ua.dicoogle.sdk.datastructs.SearchResult;

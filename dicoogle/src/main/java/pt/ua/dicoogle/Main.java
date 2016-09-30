@@ -26,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -42,18 +41,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import pt.ieeta.anonymouspatientdata.core.Anonymous;
-
 import pt.ua.dicoogle.core.AsyncIndex;
-import pt.ua.dicoogle.core.ClientSettings;
-import pt.ua.dicoogle.core.ServerSettings;
+import pt.ua.dicoogle.core.settings.ClientSettings;
+import pt.ua.dicoogle.core.settings.ServerSettings;
 import pt.ua.dicoogle.core.XMLSupport;
 import pt.ua.dicoogle.DicomLog.LogDICOM;
 import pt.ua.dicoogle.DicomLog.LogXML;
 import pt.ua.dicoogle.core.TagsXML;
 import pt.ua.dicoogle.core.XMLClientSupport;
 import pt.ua.dicoogle.plugins.PluginController;
-import pt.ua.dicoogle.rGUI.server.GUIServer;
 import pt.ua.dicoogle.rGUI.client.windows.ConnectWindow;
 import pt.ua.dicoogle.sdk.Utils.Platform;
 import pt.ua.dicoogle.sdk.utils.TagsStruct;
