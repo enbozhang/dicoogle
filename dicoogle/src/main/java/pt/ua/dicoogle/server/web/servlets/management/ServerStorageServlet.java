@@ -26,9 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONSerializer;
+import pt.ua.dicoogle.core.settings.ServerSettingsManager;
 import pt.ua.dicoogle.sdk.datastructs.MoveDestination;
-import pt.ua.dicoogle.core.settings.ServerSettings;
-import pt.ua.dicoogle.core.XMLSupport;
 import pt.ua.dicoogle.server.web.utils.ResponseUtil;
 
 /**
@@ -41,7 +40,7 @@ public class ServerStorageServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
         resp.setContentType("application/json");
-		resp.getWriter().write(JSONSerializer.toJSON(ServerSettings.getInstance().getMoves()).toString());
+		resp.getWriter().write(JSONSerializer.toJSON(ServerSettingsManager.getSettings().getDicomServicesSettings().getMoveDestinations()).toString());
 	}
 
 	@Override
@@ -55,16 +54,16 @@ public class ServerStorageServlet extends HttpServlet{
 		int _port= Integer.parseInt(port);
 		
 		switch(type){
-		case "add":
-			ServerSettings.getInstance().add(new MoveDestination(aetitle, ip, _port));
+		case "addMoveDestination":
+			ServerSettingsManager.getSettings().getDicomServicesSettings().addMoveDestination(new MoveDestination(aetitle, ip, _port));
 			ResponseUtil.simpleResponse(resp, "added", true);
 			break;
 		case "remove":
-			ResponseUtil.simpleResponse(resp, "removed", ServerSettings.getInstance().removeMoveDestination(aetitle, ip, _port));
+			ResponseUtil.simpleResponse(resp, "removed", ServerSettingsManager.getSettings().getDicomServicesSettings().removeMoveDestination(aetitle));
 			break;
 		}
-		
-		  new XMLSupport().printXML();
+
+		ServerSettingsManager.saveSettings();
 	}
 
 }

@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.restlet.resource.ServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pt.ua.dicoogle.core.settings.ServerSettings;
+import pt.ua.dicoogle.core.settings.ServerSettingsManager;
 import pt.ua.dicoogle.plugins.webui.WebUIPlugin;
 import pt.ua.dicoogle.plugins.webui.WebUIPluginManager;
 import pt.ua.dicoogle.sdk.*;
@@ -129,8 +129,8 @@ public class PluginController{
                 ConfigurationHolder holder = new ConfigurationHolder(pluginSettingsFile);
                 if(plugin.getName().equals("RemotePluginSet")) {
                 	this.remoteQueryPlugins = plugin;
-                	holder.getConfiguration().setProperty("NodeName", ServerSettings.getInstance().getNodeName());
-    	        	holder.getConfiguration().setProperty("TemporaryPath", ServerSettings.getInstance().getPath());
+                	//holder.getConfiguration().setProperty("NodeName", ServerSettingsManager.getSettings().getNodeName());
+    	        	//holder.getConfiguration().setProperty("TemporaryPath", ServerSettingsManager.getSettings().getPath());
                 	
                 	logger.info("Started Remote Communications Manager");
                 }
@@ -549,7 +549,7 @@ public class PluginController{
                 public void run() {
                     logger.info("Task [{}] complete: {} is indexed", taskUniqueID, pathF);
                     
-                    //RunningIndexTasks.getInstance().removeTask(taskUniqueID);
+                    //RunningIndexTasks.getSettings().removeTask(taskUniqueID);
                 }
             });
             
