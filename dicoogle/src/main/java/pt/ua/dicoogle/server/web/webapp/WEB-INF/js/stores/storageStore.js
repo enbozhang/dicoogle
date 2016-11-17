@@ -1,51 +1,48 @@
 import Reflux from 'reflux';
-import $ from 'jquery';
 
 import {StorageActions} from '../actions/storageActions';
-import {Endpoints} from '../constants/endpoints';
+import dicoogleClient from 'dicoogle-client';
+
+const Dicoogle = dicoogleClient();
 
 const StorageStore = Reflux.createStore({
     listenables: StorageActions,
     init() {
        this._contents = [];
+       this.dicoogle = dicoogleClient();
     },
 
     onGet(data){
-
-      $.ajax({
-        url: Endpoints.base + "/management/settings/storage/dicom",
-        dataType: 'json',
-        success: (data) => {
+      Dicoogle.storage.getRemoteServers((err, data) => {
+          if (err) {
+            this.trigger({
+                success: false,
+                status: err
+              });
+            return;
+          }
           this._contents = data;
           this.trigger({
             data: this._contents,
             success: true
           });
-        },
-        error: (xhr, status, err) => {
-          //FAILURE
-          this.trigger({
-              success: false,
-              status: xhr.status
-            });
-        }
       });
 
     },
-    onAdd(aetitle, ip, port) {
-      console.log("Onadd clicked 2");
-      this._contents.push({AETitle: aetitle, ipAddrs: ip, port});
-
-      $.post(Endpoints.base + "/management/settings/storage/dicom",
-      {
-        type: "add",
-        aetitle,
-        ip,
-        port
-      },
-      (data, status) => {
-        //Response
-        console.log("Data: " + data + "\nStatus: " + status);
+    onAdd(aetitle, ip, port, description, isPublic) {
+      Dicoogle.storage.addRemoteServer({
+        aetitle, ip, port, description, public: isPublic
+      }, (err) => {
+        if (err) {
+          this.trigger({
+            success: false,
+            status: err
+          });
+          return;
+        }
+        this._contents.push({
+          aetitle, ip, port, description, public: isPublic
+        });
         this.trigger({
           data: this._contents,
           success: true
@@ -53,28 +50,30 @@ const StorageStore = Reflux.createStore({
       });
     },
     onRemove(index) {
-      const aetitle = this._contents[index].AETitle;
-      const ip = this._contents[index].ipAddrs;
-      const port = this._contents[index].port;
-      $.post(Endpoints.base + "/management/settings/storage/dicom",
-      {
-        type: "remove",
-        aetitle,
-        ip,
-        port
-      },
-      (data, status) => {
-          //Response
-          console.log("Data: " + data + "\nStatus: " + status);
-          this._contents.splice(index, 1);
+      const {
+        aetitle, ip, port, description
+      } = this._contents[index];
+      const p = this._contents[index].public;
+
+      Dicoogle.storage.removeRemoteServer({
+        aetitle, ip, port, description, public: p
+      }, (err, removed) => {
+        if (err) {
           this.trigger({
-            data: this._contents,
-            success: true
+            success: false,
+            status: err
           });
+          return;
+        }
+        if (removed) {
+          this._contents.splice(index, 1);
+        }
+        this.trigger({
+          data: this._contents,
+          success: true
         });
-
+      });
     }
-
 });
 
 export {StorageStore};
